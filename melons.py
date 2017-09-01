@@ -7,6 +7,8 @@ class AbstractMelonOrder(object):
 
     def __init__(self, species, qty, order_type=None):
         """Initialize melon order attributes."""
+        if qty > 100:
+            raise TooManyMelonsError("No more than 100 melons!")
         self.order_type = order_type
         self.species = species
         self.qty = qty
@@ -14,8 +16,10 @@ class AbstractMelonOrder(object):
 
     def get_base_price(self):
         """ Gets base price """
+
         base_price = randint(5, 10)
         time = datetime.datetime.now()
+
         if (datetime.date.today().weekday() in range(5) and
             time.hour in range(8, 11)):
             base_price += 4
@@ -86,3 +90,11 @@ class GovernmentMelonOrder(AbstractMelonOrder):
     def mark_inspection(self, passed):
 
         self.passed_inspection = passed
+
+
+
+class TooManyMelonsError(ValueError):
+
+    def __init__(self, value):
+
+        super(TooManyMelonsError, self).__init__(value)
